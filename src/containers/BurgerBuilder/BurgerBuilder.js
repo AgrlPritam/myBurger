@@ -5,6 +5,7 @@ import BuildControls from '../../components/Burger/BuildControls/BuildControls'
 import Modal from '../../components/UI/Modal/Modal'
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary'
 import Spinner from '../../components/UI/Spinner/Spinner'
+import WithErrorHandler from '../../hoc/withErrorHandlers/withErrorHandler'
 import axios from '../../axios-orders'
 
 const INGREDIENT_PRICES = {
@@ -93,11 +94,11 @@ class BurgerBuilder extends Component {
             },
             deliveryMethod: 'Fastest'
         }
-        // axios.post('/orders.json', order)      //For firebase database using axios each endpoints need a .json at end. MongoDB doesn't need this
-        //     .then(response => 
-        //         this.setState({loading:false, purchasing:false}))
-        //     .catch(error => 
-        //         this.setState({loading: false, purchasing:false}))
+        axios.post('/orders.json', order)      //For firebase database using axios each endpoints need a .json at end. MongoDB doesn't need this
+            .then(response => 
+                this.setState({loading:false, purchasing:false}))
+            .catch(error => 
+                this.setState({loading: false, purchasing:false}))
     }
     
     render() {
@@ -137,4 +138,4 @@ class BurgerBuilder extends Component {
     }
 }
 
-export default BurgerBuilder;
+export default WithErrorHandler(BurgerBuilder, axios);
