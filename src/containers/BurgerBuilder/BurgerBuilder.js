@@ -4,6 +4,7 @@ import Burger from '../../components/Burger/Burger'
 import BuildControls from '../../components/Burger/BuildControls/BuildControls'
 import Modal from '../../components/UI/Modal/Modal'
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary'
+import axios from '../../axios-orders'
 
 const INGREDIENT_PRICES = {
     salad: 30,
@@ -74,7 +75,24 @@ class BurgerBuilder extends Component {
     }
 
     purchaseContinueHandler = () => {
-        alert('You can Continue!!')
+        //alert('You can Continue!!')
+        const order = {
+            ingredients: this.state.ingredients,
+            price: this.state.totalPrice,
+            customer: {
+                name: 'DevilHorns',
+                address: {
+                    lane: 'Test Lane 1',
+                    pincode: '785524',
+                    country: 'India'
+                },
+                email: 'test@test.com'
+            },
+            deliveryMethod: 'Fastest'
+        }
+        axios.post('/orders.json', order)      //For firebase database using axios each endpoints need a .json at end. MongoDB doesn't need this
+            .then(response => console.log(response))
+            .catch(error => console.log(error))
     }
     
     render() {
