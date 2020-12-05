@@ -9,14 +9,20 @@ const withErrorHandler = (WrappedComponent, axios) => {
             error: null
         }
 
-        componentDidMount() {
-            axios.interceptors.request.use(req => {
+        componentWillMount() {
+            this.reqInterceptor = axios.interceptors.request.use(req => {
                 this.setState({error: null})
                 return req
             })
-            axios.interceptors.response.use(res => res, error => {
+            this.resInterceptor = axios.interceptors.response.use(res => res, error => {
                 this.setState({error})
             })
+        }
+
+        //We have to unmount the interceptors as if this component will be used somewhere else it will create multiple interceptors causing memory leaks
+        componentWillUnmount() {
+            axios.interceptors.request.eject(this.reqInterceptor)
+            axios.interceptors.response.eject(this.resInterceptor)
         }
 
         errorConfirmedHandler =() => {
